@@ -43,7 +43,10 @@ jobs:
 
       - name: Example dependencies [macOS]
         if: matrix.os == 'macOS-latest'
-        run: brew install swig
+        run: |
+          brew install swig
+          # https://cibuildwheel.readthedocs.io/en/stable/cpp_standards
+          echo "::set-env name=MACOSX_DEPLOYMENT_TARGET::10.14"
 
       - name: Example dependencies [Ubuntu]
         if: matrix.os == 'ubuntu-20.04'
