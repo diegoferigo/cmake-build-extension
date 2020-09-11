@@ -65,6 +65,10 @@ set_property(
     TARGET ${swig_name}
     PROPERTY SWIG_DEPENDS bindings/numpy.i)
 
+if(APPLE)
+    set_target_properties(${swig_name} PROPERTIES SUFFIX ".so")
+endif()
+
 # TODO: in the README explain why static, and how to overcome the problem
 #       with RPATH support (+ link of gitlab)
 # TODO: mention auditwheel
