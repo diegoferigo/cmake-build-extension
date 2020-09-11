@@ -28,8 +28,6 @@ class BuildExtension(build_ext):
         # Check that Ninja is installed
         self._raise_if_not_installed(command="ninja")
 
-        if platform.system() != "Linux":
-            raise RuntimeError("Only Linux is currently supported")
 
         for ext in cmake_extensions:
             self.build_extension(ext)
@@ -69,21 +67,21 @@ class BuildExtension(build_ext):
             '--config', ext.cmake_build_type
         ]
 
-        # TODO: Handle differences in OS and CMake generators
-        # Refer to https://github.com/pybind/cmake_example/blob/master/setup.py
+        # CMake install target
+        install_target = "install"
+
         if platform.system() == "Windows":
-            raise NotImplementedError("Platform not yet supported")
 
-        elif platform.system() == "Darwin":
-            raise NotImplementedError("Platform not yet supported")
+            configure_args += [
+                # f"-A x64",
+                f"-DCMAKE_BUILD_TYPE={ext.cmake_build_type}",
+            ]
 
-        elif platform.system() == "Linux":
+        elif platform.system() in {"Linux", "Darwin"}:
 
             configure_args += [
                 f"-DCMAKE_BUILD_TYPE={ext.cmake_build_type}",
             ]
-
-            install_target = "install"
 
         else:
             raise RuntimeError(f"Unsupported '{platform.system()}' platform")
