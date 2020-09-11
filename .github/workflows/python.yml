@@ -94,3 +94,6 @@ jobs:
           echo ""
           echo "Distributions:"
           ls -alh dist/
+
+      - name: Check wheel
+        run: test $(find dist/ -name *-none-any.whl | wc -l) -gt 0
