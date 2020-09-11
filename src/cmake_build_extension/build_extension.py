@@ -1,3 +1,4 @@
+import shutil
 import platform
 import subprocess
 from pathlib import Path
@@ -23,22 +24,15 @@ class BuildExtension(build_ext):
             raise ValueError("No CMakeExtension objects found")
 
         # Check that CMake is installed
-        self._raise_if_not_installed(command="cmake")
+        if shutil.which("cmake") is None:
+            raise RuntimeError(f"Required command 'cmake' not found")
 
         # Check that Ninja is installed
-        self._raise_if_not_installed(command="ninja")
-
+        if shutil.which("ninja") is None:
+            raise RuntimeError(f"Required command 'ninja' not found")
 
         for ext in cmake_extensions:
             self.build_extension(ext)
-
-    @staticmethod
-    def _raise_if_not_installed(command: str) -> None:
-
-        try:
-            _ = subprocess.check_output(['which', command])
-        except subprocess.CalledProcessError:
-            raise RuntimeError(f"Required command '{command}' not found")
 
     def build_extension(self, ext: CMakeExtension) -> None:
         """
