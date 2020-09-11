@@ -1,3 +1,4 @@
+import sys
 from pathlib import Path
 from setuptools import setup
 from cmake_build_extension import BuildExtension, CMakeExtension
@@ -22,6 +23,7 @@ setup(
         CMakeExtension(name='mymath',
                        source_dir=str(Path(".").absolute()),
                        cmake_configure_options=[
+                           f"-DPython3_ROOT_DIR={Path(sys.prefix)}",
                            "-DCALL_FROM_SETUP_PY:BOOL=ON"
                            "-DBUILD_SHARED_LIBS:BOOL=OFF",
                        ]),
