@@ -27,6 +27,7 @@ setup(
         "Topic :: System :: Archiving :: Packaging",
     ],
     use_scm_version=dict(local_scheme="dirty-tag"),
+    setup_requires=['setuptools_scm'],
     python_requires='>=3.6',
     packages=find_packages("src"),
     package_dir={'': "src"},
