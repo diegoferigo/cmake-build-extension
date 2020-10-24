@@ -26,6 +26,9 @@ class CMakeExtension(Extension):
 
         super().__init__(name=name, sources=[])
 
+        if not Path(source_dir).is_absolute():
+            source_dir = str(Path(".").absolute() / source_dir)
+
         if not Path(source_dir).absolute().is_dir():
             raise ValueError(f"Directory '{source_dir}' does not exist")
 
