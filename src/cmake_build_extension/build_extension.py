@@ -120,7 +120,7 @@ class BuildExtension(build_ext):
         configure_args += self.cmake_defines
 
         # Get the absolute path to the build folder
-        build_folder = str(Path('.').absolute() / self.build_temp)
+        build_folder = str(Path('.').absolute() / f"{self.build_temp}_{ext.name}")
 
         # Make sure that the build folder exists
         Path(build_folder).mkdir(exist_ok=True, parents=True)
