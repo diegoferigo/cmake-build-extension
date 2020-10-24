@@ -21,6 +21,7 @@ setup(
     python_requires='>=3.6',
     ext_modules=[
         CMakeExtension(name='mymath',
+                       install_prefix="mymath",
                        source_dir=str(Path(".").absolute()),
                        cmake_configure_options=[
                            f"-DPython3_ROOT_DIR={Path(sys.prefix)}",
