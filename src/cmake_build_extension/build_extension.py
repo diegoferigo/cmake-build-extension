@@ -71,6 +71,10 @@ class BuildExtension(build_ext):
             ext: The CMakeExtension object to build.
         """
 
+        if self.inplace and ext.disable_editable:
+            print(f"Editable install recognized. Extension '{ext.name}' disabled.")
+            return
+
         # The ext_dir directory can be thought as a temporary site-package folder.
         #
         # Case 1: regular installation.
