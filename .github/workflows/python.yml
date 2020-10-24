@@ -9,7 +9,6 @@ jobs:
   build-and-test:
     name: 'Python${{ matrix.python-version }}@${{ matrix.os }}'
     runs-on: ${{ matrix.os }}
-#    continue-on-error: ${{ matrix.experimental }}
     strategy:
       matrix:
         python-version:
@@ -20,25 +19,10 @@ jobs:
           - ubuntu-20.04
           - macos-latest
           - windows-latest
-#        experimental: []
         include:
           - os: windows-latest
             python-version: 3.8
             experimental: true
-#          - os: windows-latest
-#            python-version: 3.8
-#            experimental: true
-
-#        include:
-#          - os: windows-latest
-#            python-version: 3.6
-#            experimental: false
-#          - os: windows-latest
-#            python-version: 3.7
-#            experimental: false
-#          - os: windows-latest
-#            python-version: 3.8
-#            experimental: true
 
     steps:
 

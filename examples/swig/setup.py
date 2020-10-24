@@ -27,7 +27,7 @@ setup(
                            "-DCALL_FROM_SETUP_PY:BOOL=ON",
                            "-DBUILD_SHARED_LIBS:BOOL=OFF",
                        ]),
-                       ],
+    ],
     cmdclass=dict(build_ext=BuildExtension),
     zip_safe=False,
 )

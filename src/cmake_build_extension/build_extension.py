@@ -79,6 +79,7 @@ class BuildExtension(build_ext):
         # CMake configure arguments
         configure_args = [
             f"-GNinja",
+            f"-DCMAKE_BUILD_TYPE={ext.cmake_build_type}",
             f"-DCMAKE_INSTALL_PREFIX:PATH={cmake_install_prefix}",
         ]
 
@@ -96,14 +97,11 @@ class BuildExtension(build_ext):
         if platform.system() == "Windows":
 
             configure_args += [
-                # f"-A x64",
-                f"-DCMAKE_BUILD_TYPE={ext.cmake_build_type}",
             ]
 
         elif platform.system() in {"Linux", "Darwin"}:
 
             configure_args += [
-                f"-DCMAKE_BUILD_TYPE={ext.cmake_build_type}",
             ]
 
         else:
@@ -125,14 +123,14 @@ class BuildExtension(build_ext):
         # Make sure that the build folder exists
         Path(build_folder).mkdir(exist_ok=True, parents=True)
 
-        # Compose CMake configure command
+        # 1. Compose CMake configure command
         configure_command = \
             ['cmake', '-S', ext.source_dir, '-B', build_folder] + configure_args
 
-        # Compose CMake build command
+        # 2. Compose CMake build command
         build_command = ['cmake', '--build', build_folder] + build_args
 
-        # Compose CMake install command
+        # 3. Compose CMake install command
         install_command = ['cmake', '--build', build_folder, '--target', install_target]
 
         print(f"")
