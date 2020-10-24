@@ -86,7 +86,7 @@ class BuildExtension(build_ext):
                 raise ValueError(f"Failed to import '{pkg}'")
 
             init = importlib.util.find_spec(pkg).origin
-            CMakeExtension.extend_cmake_prefix_path(path=str(Path(init).parent))
+            BuildExtension.extend_cmake_prefix_path(path=str(Path(init).parent))
 
         # The ext_dir directory can be thought as a temporary site-package folder.
         #
