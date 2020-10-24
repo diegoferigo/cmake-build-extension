@@ -74,7 +74,7 @@ class BuildExtension(build_ext):
         # If the installation is editable (self.inplace is True), the plugin libraries
         # are installed in the source tree
         ext_dir = Path(self.get_ext_fullpath(ext.name)).parent.absolute()
-        cmake_install_prefix = ext_dir / ext.name
+        cmake_install_prefix = ext_dir / ext.install_prefix
 
         # CMake configure arguments
         configure_args = [
