@@ -4,6 +4,17 @@ import subprocess
 from pathlib import Path
 from .cmake_extension import CMakeExtension
 from setuptools.command.build_ext import build_ext
+from .build_ext_option import add_new_build_ext_option, BuildExtOption
+
+
+custom_options = [
+    BuildExtOption(variable="define=", short="D",
+                   help="Create or update CMake cache "
+                        "(concatenate options with '-DBAR=b;FOO=f')")
+]
+
+for o in custom_options:
+    add_new_build_ext_option(option=o, override=True)
 
 
 class BuildExtension(build_ext):
@@ -11,6 +22,24 @@ class BuildExtension(build_ext):
     Setuptools build extension handler.
     It processes all the extensions listed in the 'ext_modules' entry.
     """
+
+    def initialize_options(self):
+
+        # Initialize base class
+        build_ext.initialize_options(self)
+
+        # Override define. This is supposed to pass C preprocessor macros, but we use it
+        # to pass custom options to CMake.
+        self.define = None
+
+    def finalize_options(self):
+
+        # Parse the custom CMake options and store them in a new attribute
+        defines = self.define.split(";") if self.define is not None else []
+        self.cmake_defines = [f"-D{define}" for define in defines]
+
+        # Call base class
+        build_ext.finalize_options(self)
 
     def run(self) -> None:
         """
@@ -79,6 +108,16 @@ class BuildExtension(build_ext):
 
         else:
             raise RuntimeError(f"Unsupported '{platform.system()}' platform")
+
+        # Parse the optional CMake options. They can be passed as:
+        #
+        # python setup.py build_ext -D"BAR=Foo;VAR=TRUE"
+        # python setup.py bdist_wheel build_ext -D"BAR=Foo;VAR=TRUE"
+        # python setup.py install build_ext -D"BAR=Foo;VAR=TRUE"
+        # python setup.py install -e build_ext -D"BAR=Foo;VAR=TRUE"
+        # pip install --global-option="build_ext" --global-option="-DBAR=Foo;VAR=TRUE" .
+        #
+        configure_args += self.cmake_defines
 
         # Get the absolute path to the build folder
         build_folder = str(Path('.').absolute() / self.build_temp)
