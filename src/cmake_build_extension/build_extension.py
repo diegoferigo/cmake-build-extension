@@ -1,5 +1,7 @@
+import os
 import shutil
 import platform
+import importlib
 import subprocess
 from pathlib import Path
 from .cmake_extension import CMakeExtension
@@ -74,6 +76,17 @@ class BuildExtension(build_ext):
         if self.inplace and ext.disable_editable:
             print(f"Editable install recognized. Extension '{ext.name}' disabled.")
             return
+
+        # Export CMAKE_PREFIX_PATH of all the dependencies
+        for pkg in ext.cmake_depends_on:
+
+            try:
+                importlib.import_module(pkg)
+            except ImportError:
+                raise ValueError(f"Failed to import '{pkg}'")
+
+            init = importlib.util.find_spec(pkg).origin
+            CMakeExtension.extend_cmake_prefix_path(path=str(Path(init).parent))
 
         # The ext_dir directory can be thought as a temporary site-package folder.
         #
@@ -158,3 +171,17 @@ class BuildExtension(build_ext):
         subprocess.check_call(configure_command)
         subprocess.check_call(build_command)
         subprocess.check_call(install_command)
+
+    @staticmethod
+    def extend_cmake_prefix_path(path: str) -> None:
+
+        abs_path = Path(path).absolute()
+
+        if not abs_path.exists():
+            raise ValueError(f"Path {abs_path} does not exist")
+
+        if "CMAKE_PREFIX_PATH" in os.environ:
+            os.environ["CMAKE_PREFIX_PATH"] = \
+                f"{str(path)}:{os.environ['CMAKE_PREFIX_PATH']}"
+        else:
+            os.environ["CMAKE_PREFIX_PATH"] = str(path)
