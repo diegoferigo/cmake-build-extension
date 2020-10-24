@@ -71,8 +71,14 @@ class BuildExtension(build_ext):
             ext: The CMakeExtension object to build.
         """
 
-        # If the installation is editable (self.inplace is True), the plugin libraries
-        # are installed in the source tree
+        # The ext_dir directory can be thought as a temporary site-package folder.
+        #
+        # Case 1: regular installation.
+        #   ext_dir is the folder that gets compressed to make the wheel archive. When
+        #   installed, the archive is extracted in the active site-package directory.
+        # Case 2: editable installation.
+        #   ext_dir is the in-source folder containing the Python packages. In this case,
+        #   the CMake project is installed in-source.
         ext_dir = Path(self.get_ext_fullpath(ext.name)).parent.absolute()
         cmake_install_prefix = ext_dir / ext.install_prefix
 
