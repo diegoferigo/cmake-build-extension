@@ -3,6 +3,9 @@ name: Python CI/CD
 on:
   push:
   pull_request:
+  release:
+    types:
+      - published
 
 jobs:
 
@@ -72,7 +75,8 @@ jobs:
     needs: build-and-test
     if: |
       github.repository == 'diegoferigo/cmake-build-extension' &&
-      github.ref == 'refs/heads/master'
+      ((github.event_name == 'push' && github.ref == 'refs/heads/master') ||
+       (github.event_name == 'release'))
     runs-on: ubuntu-20.04
     strategy:
       matrix:
