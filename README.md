@@ -1,5 +1,12 @@
 # cmake-build-extension
 
+[![Version](https://img.shields.io/pypi/v/cmake-build-extension.svg)](https://pypi.org/project/cmake-build-extension/)
+[![Python versions](https://img.shields.io/pypi/pyversions/cmake-build-extension.svg)](https://pypi.org/project/cmake-build-extension/)
+[![Status](https://img.shields.io/pypi/status/cmake-build-extension.svg)](https://pypi.org/project/cmake-build-extension/)
+[![Format](https://img.shields.io/pypi/format/cmake-build-extension.svg)](https://pypi.org/project/cmake-build-extension/)
+[![License](https://img.shields.io/pypi/l/cmake-build-extension.svg)](https://pypi.org/project/cmake-build-extension/)
+[![Python CI/CD](https://github.com/diegoferigo/cmake-build-extension/workflows/Python%20CI/CD/badge.svg)](https://github.com/diegoferigo/cmake-build-extension/actions)
+
 Setuptools extension to build and package CMake projects.
 
 A project `MyProject` with C++ files that can be compiled with CMake (here `MyClass.{h,cpp}`) 
