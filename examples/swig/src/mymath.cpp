@@ -1,5 +1,7 @@
 #include "mymath.h"
 
+#include <algorithm>
+#include <stdexcept>
 #include <cmath>
 #include <functional>
 #include <numeric>
