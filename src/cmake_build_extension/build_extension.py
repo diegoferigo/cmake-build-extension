@@ -56,11 +56,11 @@ class BuildExtension(build_ext):
 
         # Check that CMake is installed
         if shutil.which("cmake") is None:
-            raise RuntimeError(f"Required command 'cmake' not found")
+            raise RuntimeError("Required command 'cmake' not found")
 
         # Check that Ninja is installed
         if shutil.which("ninja") is None:
-            raise RuntimeError(f"Required command 'ninja' not found")
+            raise RuntimeError("Required command 'ninja' not found")
 
         for ext in cmake_extensions:
             self.build_extension(ext)
@@ -101,7 +101,7 @@ class BuildExtension(build_ext):
 
         # CMake configure arguments
         configure_args = [
-            f"-GNinja",
+            "-GNinja",
             f"-DCMAKE_BUILD_TYPE={ext.cmake_build_type}",
             f"-DCMAKE_INSTALL_PREFIX:PATH={cmake_install_prefix}",
         ]
@@ -154,16 +154,18 @@ class BuildExtension(build_ext):
         build_command = ['cmake', '--build', build_folder] + build_args
 
         # 3. Compose CMake install command
-        install_command = ['cmake', '--build', build_folder, '--target', install_target]
+        install_command = ['cmake', '--install', build_folder]
+        if ext.cmake_component is not None:
+            install_command.extend(['--component', ext.cmake_component])
 
-        print(f"")
-        print(f"==> Configuring:")
+        print("")
+        print("==> Configuring:")
         print(f"$ {' '.join(configure_command)}")
-        print(f"")
-        print(f"==> Building:")
+        print("")
+        print("==> Building:")
         print(f"$ {' '.join(build_command)}")
-        print(f"")
-        print(f"==> Installing:")
+        print("")
+        print("==> Installing:")
         print(f"$ {' '.join(install_command)}")
         print("")
 

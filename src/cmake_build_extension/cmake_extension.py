@@ -14,6 +14,8 @@ class CMakeExtension(Extension):
         disable_editable: Skip this extension in editable mode.
         source_dir: The location of the main CMakeLists.txt.
         cmake_build_type: The default build type of the CMake project.
+        cmake_component: The name of component to install. Defaults to all
+            components.
         cmake_depends_on: List of dependency packages containing required CMake projects.
     """
 
@@ -24,6 +26,7 @@ class CMakeExtension(Extension):
                  cmake_configure_options: List[str] = (),
                  source_dir: str = str(Path(".").absolute()),
                  cmake_build_type: str = "Release",
+                 cmake_component: str = None,
                  cmake_depends_on: List[str] = ()):
 
         super().__init__(name=name, sources=[])
@@ -40,3 +43,4 @@ class CMakeExtension(Extension):
         self.cmake_depends_on = cmake_depends_on
         self.source_dir = str(Path(source_dir).absolute())
         self.cmake_configure_options = cmake_configure_options
+        self.cmake_component = cmake_component
