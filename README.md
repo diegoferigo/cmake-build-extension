@@ -80,7 +80,7 @@ simplify the building process, especially for big projects.
 
 Check out [`examples/swig`](examples/swig) for a minimal working example.
 
-### Usage
+## Usage
 
 Once both CMake project and `setup.py` are correctly configured, the following
 commands can be used:
@@ -113,3 +113,7 @@ python setup.py bdist_wheel build_ext -D"BAR=Foo;VAR=TRUE"
 If the Python project is compliant with PEP517 and PEP518, `pip` will use an isolated environment.
 Note that CMake's `find_package` will still find resources from the filesystem and it will
 not be isolated. 
+
+## Caveats
+
+- Beyond distributing a hybrid C++ / Python project through, e.g., PyPI, this extension simplifies including the exported CMake project in the resulting wheel. This is dependent on how the CMake project is configured and whether it installs in the prefix the [exported targets](https://gitlab.kitware.com/cmake/community/-/wikis/doc/tutorials/Exporting-and-Importing-Targets) alongside to shared libraries and headers. If everything is in place, the `manylinux*` guidelines could still work against you. In fact, wheels supporting `manylinux2010|manylinux2014` are built [with gcc4](https://www.python.org/dev/peps/pep-0599/#the-manylinux2014-policy) that does not support the new C++11 ABIs. In few words, this means that the exported libraries bundled with the wheel cannot be imported in a downstream project using relatevely new C++ standards! For more details visit [robotology/idyntree#776](https://github.com/robotology/idyntree/issues/776). Luckily, the situation changed thanks to the finalization of [PEP600](https://www.python.org/dev/peps/pep-0600/), i.e. `manylinux2_24` :tada: If you build a PEP600 compliant wheel (nowadays compatible with most of the commonly used distributions), your exported CMake project bundled in the wheel can be successfully imported by either standalone C++ downstream projects by simply configuring `CMAKE_INSTALL_PREFIX=/path/to/site-packages/<package_name>`, or from other projects using `cmake_build_extension` using the [cmake_depends_on](https://github.com/diegoferigo/cmake-build-extension/blob/69fc8c23ce065fd1830e74094bd7c090e44b3e4d/src/cmake_build_extension/cmake_extension.py#L30) option ([example](https://github.com/robotology/gym-ignition/blob/4a95c80271c6277821ad60990eb664e7c3092042/setup.py#L73)).
