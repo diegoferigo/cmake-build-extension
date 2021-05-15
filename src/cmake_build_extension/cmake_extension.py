@@ -14,10 +14,10 @@ class CMakeExtension(Extension):
         disable_editable: Skip this extension in editable mode.
         write_top_level_init: Create a new top-level ``__init__.py`` file in the install
             prefix and write content.
+        cmake_configure_options: List of additional CMake configure options (-DBAR=FOO).
         source_dir: The location of the main CMakeLists.txt.
         cmake_build_type: The default build type of the CMake project.
-        cmake_component: The name of component to install. Defaults to all
-            components.
+        cmake_component: The name of component to install. Defaults to all components.
         cmake_depends_on: List of dependency packages containing required CMake projects.
     """
 
