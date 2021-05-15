@@ -23,7 +23,7 @@ class CMakeExtension(Extension):
 
     def __init__(self,
                  name: str,
-                 install_prefix: str,
+                 install_prefix: str = "",
                  disable_editable: bool = False,
                  write_top_level_init: str = None,
                  cmake_configure_options: List[str] = (),
