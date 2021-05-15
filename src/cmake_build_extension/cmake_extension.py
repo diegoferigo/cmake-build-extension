@@ -12,6 +12,8 @@ class CMakeExtension(Extension):
         install_prefix: The path relative to the site-package directory where the CMake
             project is installed (typically the name of the Python package).
         disable_editable: Skip this extension in editable mode.
+        write_top_level_init: Create a new top-level ``__init__.py`` file in the install
+            prefix and write content.
         source_dir: The location of the main CMakeLists.txt.
         cmake_build_type: The default build type of the CMake project.
         cmake_component: The name of component to install. Defaults to all
@@ -23,6 +25,7 @@ class CMakeExtension(Extension):
                  name: str,
                  install_prefix: str,
                  disable_editable: bool = False,
+                 write_top_level_init: str = None,
                  cmake_configure_options: List[str] = (),
                  source_dir: str = str(Path(".").absolute()),
                  cmake_build_type: str = "Release",
@@ -40,6 +43,7 @@ class CMakeExtension(Extension):
         self.install_prefix = install_prefix
         self.cmake_build_type = cmake_build_type
         self.disable_editable = disable_editable
+        self.write_top_level_init = write_top_level_init
         self.cmake_depends_on = cmake_depends_on
         self.source_dir = str(Path(source_dir).absolute())
         self.cmake_configure_options = cmake_configure_options
