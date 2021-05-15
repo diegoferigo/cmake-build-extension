@@ -174,6 +174,11 @@ class BuildExtension(build_ext):
         subprocess.check_call(build_command)
         subprocess.check_call(install_command)
 
+        # Write content to the top-level __init__.py
+        if ext.write_top_level_init is not None:
+            with open(file=cmake_install_prefix / "__init__.py", mode="w") as f:
+                f.write(ext.write_top_level_init)
+
     @staticmethod
     def extend_cmake_prefix_path(path: str) -> None:
 
