@@ -92,8 +92,17 @@ jobs:
       - name: Create distributions
         run: python -m build -o dist/
 
+      - name: Inspect dist folder
+        run: ls -lah dist/
+
       - name: Check wheel
         run: test $(find dist/ -name *-none-any.whl | wc -l) -gt 0
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          path: dist/*
+          name: dist
 
       - name: Publish to PyPI
         if: |
