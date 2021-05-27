@@ -18,13 +18,18 @@ jobs:
           - 3.6
           - 3.7
           - 3.8
+          - 3.9
         os:
           - ubuntu-20.04
           - macos-latest
           - windows-latest
         include:
+          # https://github.com/diegoferigo/cmake-build-extension/issues/8
           - os: windows-latest
             python-version: 3.8
+            experimental: true
+          - os: windows-latest
+            python-version: 3.9
             experimental: true
 
     steps:
@@ -37,11 +42,8 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install Python tools
-        run: pip install pytest
-
       - name: Install cmake-build-extensions
-        run: pip install -v .
+        run: pip install wheel && pip install -v .[all]
 
       - name: Example dependencies [Windows]
         if: matrix.os == 'windows-latest'
@@ -65,23 +67,14 @@ jobs:
         shell: bash
         continue-on-error: ${{ matrix.experimental }}
         run: |
-          pip install wheel ninja cmake numpy
           cd examples/swig
-          pip install --no-build-isolation -v .
+          pip install -v .
           pytest -sv tests
 
   publish:
     name: 'Publish to PyPI'
     needs: build-and-test
-    if: |
-      github.repository == 'diegoferigo/cmake-build-extension' &&
-      ((github.event_name == 'push' && github.ref == 'refs/heads/master') ||
-       (github.event_name == 'release'))
     runs-on: ubuntu-20.04
-    strategy:
-      matrix:
-        python-version:
-          - 3.8
 
     steps:
 
@@ -91,23 +84,31 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v2
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: 3.8
 
       - name: Install Python tools
-        run: pip install setuptools_scm wheel
+        run: pip install build
 
       - name: Create distributions
-        run: |
-          python setup.py sdist
-          pip wheel -w dist/ .
-          echo ""
-          echo "Distributions:"
-          ls -alh dist/
+        run: python -m build -o dist/
+
+      - name: Inspect dist folder
+        run: ls -lah dist/
 
       - name: Check wheel
         run: test $(find dist/ -name *-none-any.whl | wc -l) -gt 0
 
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          path: dist/*
+          name: dist
+
       - name: Publish to PyPI
+        if: |
+          github.repository == 'diegoferigo/cmake-build-extension' &&
+          ((github.event_name == 'push' && github.ref == 'refs/heads/master') ||
+           (github.event_name == 'release'))
         uses: pypa/gh-action-pypi-publish@master
         with:
           user: __token__
