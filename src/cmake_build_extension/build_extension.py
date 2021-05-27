@@ -116,9 +116,6 @@ class BuildExtension(build_ext):
         # CMake build arguments
         build_args = ["--config", ext.cmake_build_type]
 
-        # CMake install target
-        install_target = "install"
-
         if platform.system() == "Windows":
 
             configure_args += []
