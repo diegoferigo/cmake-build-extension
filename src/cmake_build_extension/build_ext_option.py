@@ -1,4 +1,5 @@
 from typing import NamedTuple
+
 from setuptools.command.build_ext import build_ext
 
 
@@ -37,8 +38,9 @@ def add_new_build_ext_option(option: BuildExtOption, override: bool = True):
     """
 
     if override:
-        build_ext.user_options = \
-            [o for o in build_ext.user_options if o[1] is not option.short]
+        build_ext.user_options = [
+            o for o in build_ext.user_options if o[1] is not option.short
+        ]
     else:
         for o in build_ext.user_options:
             if o[1] == option.short:

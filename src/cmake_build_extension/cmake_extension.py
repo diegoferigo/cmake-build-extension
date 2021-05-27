@@ -1,5 +1,6 @@
-from typing import List
 from pathlib import Path
+from typing import List
+
 from setuptools import Extension
 
 
@@ -21,16 +22,18 @@ class CMakeExtension(Extension):
         cmake_depends_on: List of dependency packages containing required CMake projects.
     """
 
-    def __init__(self,
-                 name: str,
-                 install_prefix: str = "",
-                 disable_editable: bool = False,
-                 write_top_level_init: str = None,
-                 cmake_configure_options: List[str] = (),
-                 source_dir: str = str(Path(".").absolute()),
-                 cmake_build_type: str = "Release",
-                 cmake_component: str = None,
-                 cmake_depends_on: List[str] = ()):
+    def __init__(
+        self,
+        name: str,
+        install_prefix: str = "",
+        disable_editable: bool = False,
+        write_top_level_init: str = None,
+        cmake_configure_options: List[str] = (),
+        source_dir: str = str(Path(".").absolute()),
+        cmake_build_type: str = "Release",
+        cmake_component: str = None,
+        cmake_depends_on: List[str] = (),
+    ):
 
         super().__init__(name=name, sources=[])
 

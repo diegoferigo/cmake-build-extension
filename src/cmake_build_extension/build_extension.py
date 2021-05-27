@@ -1,18 +1,22 @@
-import os
-import shutil
-import platform
 import importlib
+import os
+import platform
+import shutil
 import subprocess
 from pathlib import Path
-from .cmake_extension import CMakeExtension
-from setuptools.command.build_ext import build_ext
-from .build_ext_option import add_new_build_ext_option, BuildExtOption
 
+from setuptools.command.build_ext import build_ext
+
+from .build_ext_option import BuildExtOption, add_new_build_ext_option
+from .cmake_extension import CMakeExtension
 
 custom_options = [
-    BuildExtOption(variable="define=", short="D",
-                   help="Create or update CMake cache "
-                        "(concatenate options with '-DBAR=b;FOO=f')")
+    BuildExtOption(
+        variable="define=",
+        short="D",
+        help="Create or update CMake cache "
+        "(concatenate options with '-DBAR=b;FOO=f')",
+    )
 ]
 
 for o in custom_options:
@@ -110,22 +114,18 @@ class BuildExtension(build_ext):
         configure_args += ext.cmake_configure_options
 
         # CMake build arguments
-        build_args = [
-            '--config', ext.cmake_build_type
-        ]
+        build_args = ["--config", ext.cmake_build_type]
 
         # CMake install target
         install_target = "install"
 
         if platform.system() == "Windows":
 
-            configure_args += [
-            ]
+            configure_args += []
 
         elif platform.system() in {"Linux", "Darwin"}:
 
-            configure_args += [
-            ]
+            configure_args += []
 
         else:
             raise RuntimeError(f"Unsupported '{platform.system()}' platform")
@@ -141,22 +141,27 @@ class BuildExtension(build_ext):
         configure_args += self.cmake_defines
 
         # Get the absolute path to the build folder
-        build_folder = str(Path('.').absolute() / f"{self.build_temp}_{ext.name}")
+        build_folder = str(Path(".").absolute() / f"{self.build_temp}_{ext.name}")
 
         # Make sure that the build folder exists
         Path(build_folder).mkdir(exist_ok=True, parents=True)
 
         # 1. Compose CMake configure command
-        configure_command = \
-            ['cmake', '-S', ext.source_dir, '-B', build_folder] + configure_args
+        configure_command = [
+            "cmake",
+            "-S",
+            ext.source_dir,
+            "-B",
+            build_folder,
+        ] + configure_args
 
         # 2. Compose CMake build command
-        build_command = ['cmake', '--build', build_folder] + build_args
+        build_command = ["cmake", "--build", build_folder] + build_args
 
         # 3. Compose CMake install command
-        install_command = ['cmake', '--install', build_folder]
+        install_command = ["cmake", "--install", build_folder]
         if ext.cmake_component is not None:
-            install_command.extend(['--component', ext.cmake_component])
+            install_command.extend(["--component", ext.cmake_component])
 
         print("")
         print("==> Configuring:")
@@ -188,7 +193,8 @@ class BuildExtension(build_ext):
             raise ValueError(f"Path {abs_path} does not exist")
 
         if "CMAKE_PREFIX_PATH" in os.environ:
-            os.environ["CMAKE_PREFIX_PATH"] = \
-                f"{str(path)}:{os.environ['CMAKE_PREFIX_PATH']}"
+            os.environ[
+                "CMAKE_PREFIX_PATH"
+            ] = f"{str(path)}:{os.environ['CMAKE_PREFIX_PATH']}"
         else:
             os.environ["CMAKE_PREFIX_PATH"] = str(path)

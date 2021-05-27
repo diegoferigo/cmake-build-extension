@@ -1,3 +1,18 @@
 [build-system]
-requires = ["setuptools>=40.8.0", "setuptools_scm[toml]>=3.4", "cmake_build_extension", "wheel", "numpy"]
+requires = [
+    "wheel",
+    "setuptools>=45",
+    "setuptools_scm[toml]>=6.0",
+    "cmake_build_extension",
+    "numpy",
+    "cmake>=3.16",
+    "ninja",
+]
 build-backend = "setuptools.build_meta"
+
+[tool.black]
+line-length = 88
+
+[tool.isort]
+profile = "black"
+multi_line_output = 3
