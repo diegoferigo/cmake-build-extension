@@ -42,11 +42,8 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
-      - name: Install Python tools
-        run: pip install pytest
-
       - name: Install cmake-build-extensions
-        run: pip install -v .
+        run: pip install wheel && pip install -v .[all]
 
       - name: Example dependencies [Windows]
         if: matrix.os == 'windows-latest'
@@ -70,9 +67,8 @@ jobs:
         shell: bash
         continue-on-error: ${{ matrix.experimental }}
         run: |
-          pip install wheel ninja cmake numpy
           cd examples/swig
-          pip install --no-build-isolation -v .
+          pip install -v .
           pytest -sv tests
 
   publish:
@@ -95,15 +91,10 @@ jobs:
           python-version: 3.8
 
       - name: Install Python tools
-        run: pip install setuptools_scm wheel
+        run: pip install build
 
       - name: Create distributions
-        run: |
-          python setup.py sdist
-          pip wheel -w dist/ .
-          echo ""
-          echo "Distributions:"
-          ls -alh dist/
+        run: python -m build -o dist/
 
       - name: Check wheel
         run: test $(find dist/ -name *-none-any.whl | wc -l) -gt 0
