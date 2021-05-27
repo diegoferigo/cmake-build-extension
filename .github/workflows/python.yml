@@ -18,13 +18,18 @@ jobs:
           - 3.6
           - 3.7
           - 3.8
+          - 3.9
         os:
           - ubuntu-20.04
           - macos-latest
           - windows-latest
         include:
+          # https://github.com/diegoferigo/cmake-build-extension/issues/8
           - os: windows-latest
             python-version: 3.8
+            experimental: true
+          - os: windows-latest
+            python-version: 3.9
             experimental: true
 
     steps:
