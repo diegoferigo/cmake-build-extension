@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
+cmake_minimum_required(VERSION 3.18)
 project(MyMath VERSION 1.0)
 
 include(GNUInstallDirs)
@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 # Find Python3 and NumPy
-find_package(Python3 COMPONENTS Interpreter Development NumPy REQUIRED)
+find_package(Python3 COMPONENTS Interpreter Development.Module NumPy REQUIRED)
 
 # ============
 # math library
@@ -43,14 +43,14 @@ set_source_files_properties(bindings/${swig_name}.i PROPERTIES
     SWIG_MODULE_NAME "bindings")
 
 swig_add_library(${swig_name}
-    TYPE SHARED
+    TYPE MODULE
     LANGUAGE python
     OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/mymath
     OUTFILE_DIR ${CMAKE_CURRENT_BINARY_DIR}
     SOURCES bindings/${swig_name}.i)
 
 target_link_libraries(${swig_name}
-    PRIVATE mymath Python3::Python Python3::NumPy)
+    PRIVATE mymath Python3::NumPy)
 
 set_target_properties(${swig_name} PROPERTIES
     LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/mymath)
@@ -64,10 +64,6 @@ set_property(TARGET ${swig_name}
 set_property(
     TARGET ${swig_name}
     PROPERTY SWIG_DEPENDS bindings/numpy.i)
-
-if(APPLE)
-    set_target_properties(${swig_name} PROPERTIES SUFFIX ".so")
-endif()
 
 # TODO: in the README explain why static, and how to overcome the problem
 #       with RPATH support (+ link of gitlab)
