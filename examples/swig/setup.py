@@ -22,6 +22,7 @@ setup(
         CMakeExtension(
             name="mymath",
             install_prefix="mymath",
+            expose_binaries=["bin/print_answer"],
             write_top_level_init=init_py,
             source_dir=str(Path(__file__).parent.absolute()),
             cmake_configure_options=[

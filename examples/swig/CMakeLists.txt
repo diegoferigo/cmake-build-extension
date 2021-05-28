@@ -26,6 +26,12 @@ target_include_directories(mymath PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/src>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)
 
+# =======================
+# print_answer executable
+# =======================
+
+add_executable(print_answer src/print_answer.cpp)
+
 # =============
 # SWIG bindings
 # =============
@@ -77,7 +83,7 @@ set_property(
 
 # Install the target with C++ code
 install(
-    TARGETS mymath
+    TARGETS mymath print_answer
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
