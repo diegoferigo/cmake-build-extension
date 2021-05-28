@@ -208,6 +208,11 @@ class BuildExtension(build_ext):
                             binary_path = str(path)
                             break
 
+                        path = Path(str(path) + ".exe")
+                        if path.is_file():
+                            binary_path = str(path)
+                            break
+
                     if not Path(binary_path).is_file():
                         name = binary_path if binary_path != "" else binary_name
                         raise RuntimeError(f"Failed to find binary: {{ name }}")
