@@ -3,6 +3,7 @@ import os
 import platform
 import shutil
 import subprocess
+import sys
 from pathlib import Path
 
 from setuptools.command.build_ext import build_ext
@@ -180,6 +181,51 @@ class BuildExtension(build_ext):
         if ext.write_top_level_init is not None:
             with open(file=cmake_install_prefix / "__init__.py", mode="w") as f:
                 f.write(ext.write_top_level_init)
+
+        # Write content to the bin/__main__.py magic file to expose binaries
+        if len(ext.expose_binaries) > 0:
+            bin_dirs = {str(Path(d).parents[0]) for d in ext.expose_binaries}
+
+            import inspect
+
+            main_py = inspect.cleandoc(
+                f"""
+                from pathlib import Path
+                import subprocess
+                import sys
+
+                def main():
+
+                    binary_name = Path(sys.argv[0]).name
+                    prefix = Path(__file__).parent.parent
+                    bin_dirs = {str(bin_dirs)}
+
+                    binary_path = ""
+
+                    for dir in bin_dirs:
+                        path = prefix / Path(dir) / binary_name
+                        if path.is_file():
+                            binary_path = str(path)
+                            break
+
+                    if not Path(binary_path).is_file():
+                        name = binary_path if binary_path != "" else binary_name
+                        raise RuntimeError(f"Failed to find binary: {{ name }}")
+
+                    sys.argv[0] = binary_path
+
+                    result = subprocess.run(args=sys.argv, capture_output=False)
+                    exit(result.returncode)
+
+                if __name__ == "__main__" and len(sys.argv) > 1:
+                    sys.argv = sys.argv[1:]
+                    main()"""
+            )
+
+            bin_folder = cmake_install_prefix / "bin"
+            Path(bin_folder).mkdir(exist_ok=True, parents=True)
+            with open(file=bin_folder / "__main__.py", mode="w") as f:
+                f.write(main_py)
 
     @staticmethod
     def extend_cmake_prefix_path(path: str) -> None:
