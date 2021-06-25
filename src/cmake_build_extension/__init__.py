@@ -2,9 +2,10 @@ import os
 from contextlib import contextmanager
 from pathlib import Path
 
-from . import build_ext_option
+from . import build_ext_option, sdist_command
 from .build_extension import BuildExtension
 from .cmake_extension import CMakeExtension
+from .sdist_command import GitSdistFolder, GitSdistTree
 
 
 @contextmanager
