@@ -5,7 +5,6 @@ from shutil import copy2
 from typing import Generator, List
 
 import setuptools.command.sdist
-import setuptools_scm.integration
 
 
 class GitSdistABC(abc.ABC, setuptools.command.sdist.sdist):
@@ -29,6 +28,8 @@ class GitSdistABC(abc.ABC, setuptools.command.sdist.sdist):
         This method prepares the egg metadata for the source distribution and allows
         specifying a list of files that are copied in the location of the setup.cfg.
         """
+
+        import setuptools_scm.integration
 
         # Build the setuptools_scm configuration, containing useful info for the sdist
         config: setuptools_scm.integration.Configuration = (
