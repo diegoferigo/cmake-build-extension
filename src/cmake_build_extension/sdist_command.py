@@ -142,4 +142,4 @@ class GitSdistFolder(GitSdistABC):
         all_files_gen = Path(repo_root).glob(pattern="**/*")
 
         # Return the list of absolute paths to all the git folder files (also uncommited)
-        return [f for f in all_files_gen if not f.is_dir()]
+        return [f for f in all_files_gen if not f.is_dir() and ".git" not in f.parts]
