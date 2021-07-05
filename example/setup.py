@@ -3,10 +3,7 @@ import sys
 from pathlib import Path
 
 from cmake_build_extension import BuildExtension, CMakeExtension
-from setuptools import setup
-
-with open(Path(__file__).parent.absolute() / "README.md", encoding="utf-8") as f:
-    long_description = f.read()
+import setuptools
 
 init_py = inspect.cleandoc(
     """
@@ -17,7 +14,7 @@ init_py = inspect.cleandoc(
     """
 )
 
-setup(
+setuptools.setup(
     ext_modules=[
         CMakeExtension(
             name="mymath",
