@@ -59,9 +59,8 @@ jobs:
         shell: bash
         continue-on-error: ${{ matrix.experimental }}
         run: |
-          pip install numpy
-          pip install --no-build-isolation -v ./examples/swig
-          pytest -sv examples/swig/tests
+          pip install -v ./example
+          pytest -sv example/tests
 
   publish:
     name: 'Publish to PyPI'

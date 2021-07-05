@@ -5,8 +5,6 @@ requires = [
     "setuptools_scm[toml]>=6.0",
     "cmake_build_extension",
     "numpy",
-    "cmake>=3.18",
-    "ninja",
 ]
 build-backend = "setuptools.build_meta"
 

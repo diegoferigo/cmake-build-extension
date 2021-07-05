@@ -11,7 +11,7 @@ with open(Path(__file__).parent.absolute() / "README.md", encoding="utf-8") as f
 init_py = inspect.cleandoc(
     """
     from cmake_build_extension import build_extension_env
-    
+
     with build_extension_env():
         from . import bindings
     """
