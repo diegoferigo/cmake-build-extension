@@ -59,8 +59,9 @@ jobs:
         shell: bash
         continue-on-error: ${{ matrix.experimental }}
         run: |
-          pip install -v ./example
-          pytest -sv example/tests
+          cd example
+          pip install -v .[all]
+          pytest
 
   publish:
     name: 'Publish to PyPI'
