@@ -26,7 +26,7 @@ namespace mymath {
      * @param input The vector to normalize.
      * @return The unit vector computed by normalizing the input.
      */
-    std::vector<double> normalize(const std::vector<double>& input);
+    std::vector<double> normalize(const std::vector<double>& data);
 } // namespace mymath
 
 #endif // MYMATH_H

@@ -1,10 +1,10 @@
 #include "mymath.h"
 
 #include <algorithm>
-#include <stdexcept>
 #include <cmath>
 #include <functional>
 #include <numeric>
+#include <stdexcept>
 
 double mymath::dot(const std::vector<double>& vector1,
                    const std::vector<double>& vector2)
@@ -22,20 +22,20 @@ double mymath::dot(const std::vector<double>& vector1,
     return dot;
 }
 
-std::vector<double> mymath::normalize(const std::vector<double>& input)
+std::vector<double> mymath::normalize(const std::vector<double>& data)
 {
     auto sumOfSquared = [](double accumulator, const double element) {
         return accumulator + element * element;
     };
 
     const double norm =
-        sqrt(std::accumulate(input.begin(), input.end(), 0.0, sumOfSquared));
+        sqrt(std::accumulate(data.begin(), data.end(), 0.0, sumOfSquared));
 
     std::vector<double> out;
-    out.reserve(input.size());
+    out.reserve(data.size());
 
-    std::transform(input.begin(),
-                   input.end(),
+    std::transform(data.begin(),
+                   data.end(),
                    std::back_inserter(out),
                    [&](const double d) -> double { return d / norm; });
 
