@@ -5,9 +5,10 @@
 [![Status](https://img.shields.io/pypi/status/cmake-build-extension.svg)][pypi]
 [![Format](https://img.shields.io/pypi/format/cmake-build-extension.svg)][pypi]
 [![License](https://img.shields.io/pypi/l/cmake-build-extension.svg)][pypi]
-[![Python CI/CD](https://github.com/diegoferigo/cmake-build-extension/workflows/Python%20CI/CD/badge.svg)][pypi]
+[![Python CI/CD](https://github.com/diegoferigo/cmake-build-extension/workflows/Python%20CI/CD/badge.svg)][ci_cd]
 
 [pypi]: https://pypi.org/project/cmake-build-extension/
+[ci_cd]: https://github.com/diegoferigo/cmake-build-extension/actions/workflows/python.yml
 
 **Setuptools extension to build and package CMake projects.**
 
