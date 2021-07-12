@@ -58,11 +58,13 @@ jobs:
           sudo apt update
           sudo apt install build-essential swig libeigen3-dev
 
-      - name: Build and test example
+      - name: Build and install example
         working-directory: example
-        run: |
-          pip install -v .[all]
-          pytest
+        run: pip install -v .[all]
+
+      - name: Test example
+        working-directory: example
+        run: pytest
 
   publish:
     name: Publish to PyPI
