@@ -15,6 +15,7 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 add_library(mymath
     src/mymath.h
     src/mymath.cpp)
+add_library(MyMath::mymath ALIAS mymath)
 
 set_target_properties(mymath PROPERTIES
     PUBLIC_HEADER src/mymath.h)
@@ -41,28 +42,44 @@ install(
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR})
 
+# ===============
+# Python bindings
+# ===============
+
+# Find Python3 and NumPy
+find_package(Python3 COMPONENTS Interpreter Development.Module NumPy REQUIRED)
+
 # Handle where to install the resulting Python package
-#if(CALL_FROM_SETUP_PY)
+if(CALL_FROM_SETUP_PY)
     # The CMakeExtension will set CMAKE_INSTALL_PREFIX to the root
-    # of the resulting sdist / wheel archive
-#    set(MYMATH_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
-#else()
+    # of the resulting wheel archive
+    set(MYMATH_INSTALL_PREFIX ${CMAKE_INSTALL_PREFIX})
+else()
     # The Python package is installed directly in the folder of the
     # detected interpreter (system, user, or virtualenv)
-#    set(MYMATH_INSTALL_PREFIX ${Python3_SITELIB})
-#endif()
+    set(MYMATH_INSTALL_PREFIX ${Python3_SITELIB})
+endif()
 
 # =============
 # SWIG bindings
 # =============
 
 if(EXAMPLE_WITH_SWIG)
+    # Rename the executable
+    set_target_properties(print_answer PROPERTIES OUTPUT_NAME print_answer_swig)
+
+    # Add the bindings
     add_subdirectory(bindings_swig)
 endif()
 
-# TODO: in the README explain why static, and how to overcome the problem
-#       with RPATH support (+ link of gitlab)
-# TODO: mention auditwheel
-# TODO: this example can be adapted for pybind11, that however requires
-#       manually wrapping all the exposed methods
+# =================
+# Pybind11 bindings
+# =================
 
+if(EXAMPLE_WITH_PYBIND11)
+    # Rename the executable
+    set_target_properties(print_answer PROPERTIES OUTPUT_NAME print_answer_pybind11)
+
+    # Add the bindings
+    add_subdirectory(bindings_pybind11)
+endif()
