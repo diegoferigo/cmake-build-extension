@@ -1,4 +1,5 @@
 import inspect
+import os
 import sys
 from pathlib import Path
 
@@ -14,6 +15,21 @@ init_py = inspect.cleandoc(
     """
 )
 
+# Extra options passed to the CI/CD pipeline that uses cibuildwheel
+CIBW_CMAKE_OPTIONS = []
+if "CIBUILDWHEEL" in os.environ and os.environ["CIBUILDWHEEL"] == "1":
+
+    # The manylinux variant runs in Debian Stretch and it uses lib64 folder
+    if sys.platform == "linux":
+        CIBW_CMAKE_OPTIONS += ["-DCMAKE_INSTALL_LIBDIR=lib"]
+
+    # Eigen is not found when installed with vcpkg because we don't pass the toolchain.
+    # Passing directly the right folder as workaround. This is meant to work just in CI.
+    if os.name == "nt":
+        CIBW_CMAKE_OPTIONS += [
+            "-DEigen3_DIR:PATH=C:/vcpkg/packages/eigen3_x64-windows/share/eigen3",
+        ]
+
 setuptools.setup(
     ext_modules=[
         cmake_build_extension.CMakeExtension(
@@ -28,7 +44,8 @@ setuptools.setup(
                 "-DBUILD_SHARED_LIBS:BOOL=OFF",
                 "-DEXAMPLE_WITH_SWIG:BOOL=ON",
                 "-DEXAMPLE_WITH_PYBIND11:BOOL=OFF",
-            ],
+            ]
+            + CIBW_CMAKE_OPTIONS,
         ),
         cmake_build_extension.CMakeExtension(
             name="Pybind11Bindings",
@@ -43,7 +60,8 @@ setuptools.setup(
                 "-DBUILD_SHARED_LIBS:BOOL=OFF",
                 "-DEXAMPLE_WITH_SWIG:BOOL=OFF",
                 "-DEXAMPLE_WITH_PYBIND11:BOOL=ON",
-            ],
+            ]
+            + CIBW_CMAKE_OPTIONS,
         ),
     ],
     cmdclass=dict(build_ext=cmake_build_extension.BuildExtension),
