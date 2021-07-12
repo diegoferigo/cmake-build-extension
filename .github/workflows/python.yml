@@ -24,6 +24,12 @@ jobs:
           - ubuntu-20.04
           - macos-latest
           - windows-latest
+        include:
+          # Building this entry fails with the following error:
+          # math.h:91:12: error: 'std::_hypot' has not been declared
+          - os: windows-latest
+            python-version: 3.6
+            experimental: true
 
     steps:
 
@@ -59,6 +65,7 @@ jobs:
           sudo apt install build-essential swig libeigen3-dev
 
       - name: Build and install example
+        continue-on-error: ${{ matrix.experimental }}
         working-directory: example
         run: pip install -v .[all]
         env:
@@ -66,6 +73,7 @@ jobs:
           CIBUILDWHEEL: 1
 
       - name: Test example
+        continue-on-error: ${{ matrix.experimental }}
         working-directory: example
         run: pytest
 
