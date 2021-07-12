@@ -38,33 +38,33 @@ jobs:
         run: pip install wheel && pip install -v .[all]
 
       - name: Example dependencies [Windows]
-        if: matrix.os == 'windows-latest'
+        if: contains(matrix.os, 'windows')
         shell: bash
-        run: choco install -y swig
+        run: |
+          choco install -y swig
+          vcpkg install --triplet x64-windows eigen3
 
       - name: Example dependencies [macOS]
-        if: matrix.os == 'macOS-latest'
+        if: contains(matrix.os, 'macOS')
         run: |
-          brew install swig
+          brew install swig eigen
           # https://cibuildwheel.readthedocs.io/en/stable/cpp_standards
           echo "MACOSX_DEPLOYMENT_TARGET=10.14" >> $GITHUB_ENV
 
       - name: Example dependencies [Ubuntu]
-        if: matrix.os == 'ubuntu-20.04'
+        if: contains(matrix.os, 'ubuntu')
         run: |
           sudo apt update
-          sudo apt install build-essential swig
+          sudo apt install build-essential swig libeigen3-dev
 
-      - name: "Test example: SWIG + NumPy"
-        shell: bash
-        continue-on-error: ${{ matrix.experimental }}
+      - name: Build and test example
+        working-directory: example
         run: |
-          cd example
           pip install -v .[all]
           pytest
 
   publish:
-    name: 'Publish to PyPI'
+    name: Publish to PyPI
     needs: build-and-test
     runs-on: ubuntu-20.04
 
