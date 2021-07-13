@@ -201,6 +201,8 @@ setuptools.setup(
         sdist=cmake_build_extension.GitSdistFolder,
         # Pack only the git tree:
         sdist=cmake_build_extension.GitSdistTree,
+        # Or, inherit from cmake_build_extension.sdist_command.GitSdistABC and
+        # make your own custom sdist including only the files you are interested
     ),
 )
 ```
