@@ -1,3 +1,5 @@
+// Documentation: https://numpy.org/doc/stable/reference/swig.interface-file.html
+
 %module(package="mathlib") mymath
 
 %{
