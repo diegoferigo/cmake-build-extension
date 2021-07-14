@@ -1,9 +1,8 @@
-import importlib
+import importlib.util
 import os
 import platform
 import shutil
 import subprocess
-import sys
 from pathlib import Path
 
 from setuptools.command.build_ext import build_ext
@@ -18,6 +17,11 @@ custom_options = [
         short="D",
         help="Create or update CMake cache "
         "(concatenate options with '-DBAR=b;FOO=f')",
+    ),
+    BuildExtOption(
+        variable="component",
+        short="C",
+        help="Install only a specific CMake component " "('-Cpython')",
     ),
 ]
 
@@ -40,6 +44,10 @@ class BuildExtension(build_ext):
         # Originally, it was aimed to pass C preprocessor definitions, but instead we
         # use it to pass custom configuration options to CMake.
         self.define = None
+
+        # Initialize the '--component' custom option.
+        # It overrides the content of the cmake_component option of CMakeExtension.
+        self.component = None
 
     def finalize_options(self):
 
@@ -160,8 +168,17 @@ class BuildExtension(build_ext):
 
         # 3. Compose CMake install command
         install_command = ["cmake", "--install", build_folder]
-        if ext.cmake_component is not None:
+
+        # If the cmake_component option of the CMakeExtension is used, install just
+        # the specified component.
+        if self.component is None and ext.cmake_component is not None:
             install_command.extend(["--component", ext.cmake_component])
+
+        # Instead, if the `--component` command line option is used, install just
+        # the specified component. This has higher priority than what specified in
+        # the CMakeExtension.
+        if self.component is not None:
+            install_command.extend(["--component", self.component])
 
         print("")
         print("==> Configuring:")
