@@ -23,6 +23,7 @@ set_target_properties(pybind11_bindings PROPERTIES
 # Install the pybind11 library
 install(
     TARGETS pybind11_bindings
+    COMPONENT bindings
     LIBRARY DESTINATION ${MYMATH_INSTALL_PREFIX}
     ARCHIVE DESTINATION ${MYMATH_INSTALL_PREFIX}
     RUNTIME DESTINATION ${MYMATH_INSTALL_PREFIX})
