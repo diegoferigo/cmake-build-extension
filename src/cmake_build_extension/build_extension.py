@@ -11,13 +11,14 @@ from setuptools.command.build_ext import build_ext
 from .build_ext_option import BuildExtOption, add_new_build_ext_option
 from .cmake_extension import CMakeExtension
 
+# These options are listed in `python setup.py build_ext -h`
 custom_options = [
     BuildExtOption(
-        variable="define=",
+        variable="define",
         short="D",
         help="Create or update CMake cache "
         "(concatenate options with '-DBAR=b;FOO=f')",
-    )
+    ),
 ]
 
 for o in custom_options:
@@ -35,8 +36,9 @@ class BuildExtension(build_ext):
         # Initialize base class
         build_ext.initialize_options(self)
 
-        # Override define. This is supposed to pass C preprocessor macros, but we use it
-        # to pass custom options to CMake.
+        # Initialize the '--define' custom option, overriding the pre-existing one.
+        # Originally, it was aimed to pass C preprocessor definitions, but instead we
+        # use it to pass custom configuration options to CMake.
         self.define = None
 
     def finalize_options(self):

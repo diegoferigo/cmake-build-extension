@@ -11,7 +11,7 @@ class BuildExtOption(NamedTuple):
 
         The following option:
 
-        BuildExtOption(variable="define=", short="D", help="New compiler define")
+        BuildExtOption(variable="define", short="D", help="New compiler define")
 
         is displayed as follows:
 
@@ -38,12 +38,18 @@ def add_new_build_ext_option(option: BuildExtOption, override: bool = True):
     """
 
     if override:
+        # Remove from the existing build_ext.user_options the option to override
         build_ext.user_options = [
             o for o in build_ext.user_options if o[1] is not option.short
         ]
     else:
+        # Just check if the option already exists, and raise if it does
         for o in build_ext.user_options:
             if o[1] == option.short:
                 raise ValueError(f"Short option '{o[1]}' already exists")
 
+    # The long variable name must finish with =, here we append it
+    option = option._replace(variable=f"{option.variable}=")
+
+    # Add the new option
     build_ext.user_options.append(tuple(option))
