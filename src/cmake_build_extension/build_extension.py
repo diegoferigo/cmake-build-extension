@@ -23,6 +23,11 @@ custom_options = [
         short="C",
         help="Install only a specific CMake component " "('-Cpython')",
     ),
+    BuildExtOption(
+        variable="no-cmake-extension",
+        short="K",
+        help="Disable a CMakeExtension module (examples: '-Kall', '-Kbar', '-Kbar;foo')",
+    ),
 ]
 
 for o in custom_options:
@@ -49,11 +54,22 @@ class BuildExtension(build_ext):
         # It overrides the content of the cmake_component option of CMakeExtension.
         self.component = None
 
+        # Initialize the 'no-cmake-extension' custom option.
+        # It allows disabling one or more CMakeExtension from the command line.
+        self.no_cmake_extension = None
+
     def finalize_options(self):
 
         # Parse the custom CMake options and store them in a new attribute
         defines = self.define.split(";") if self.define is not None else []
         self.cmake_defines = [f"-D{define}" for define in defines]
+
+        # Parse the disabled CMakeExtension modules and store them in a new attribute
+        self.no_cmake_extensions = (
+            []
+            if self.no_cmake_extension is None
+            else self.no_cmake_extension.split(";")
+        )
 
         # Call base class
         build_ext.finalize_options(self)
@@ -78,6 +94,11 @@ class BuildExtension(build_ext):
             raise RuntimeError("Required command 'ninja' not found")
 
         for ext in cmake_extensions:
+
+            # Disable the extension if specified in the command line
+            if ext.name in self.no_cmake_extensions or "all" in self.no_cmake_extensions:
+                continue
+
             self.build_extension(ext)
 
     def build_extension(self, ext: CMakeExtension) -> None:
