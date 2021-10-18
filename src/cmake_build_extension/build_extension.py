@@ -99,6 +99,15 @@ class BuildExtension(build_ext):
             if ext.name in self.no_cmake_extensions or "all" in self.no_cmake_extensions:
                 continue
 
+            # Disable all extensions if this env variable is present
+            disabled_set = {"0", "false", "off", "no"}
+            env_var_name = "CMAKE_BUILD_EXTENSION_ENABLED"
+            if (
+                env_var_name in os.environ
+                and os.environ[env_var_name].lower() in disabled_set
+            ):
+                continue
+
             self.build_extension(ext)
 
     def build_extension(self, ext: CMakeExtension) -> None:
