@@ -15,13 +15,17 @@ custom_options = [
     BuildExtOption(
         variable="define",
         short="D",
-        help="Create or update CMake cache "
-        "(concatenate options with '-DBAR=b;FOO=f')",
+        help="Create or update CMake cache " "(example: '-DBAR=b;FOO=f')",
     ),
     BuildExtOption(
         variable="component",
         short="C",
-        help="Install only a specific CMake component " "('-Cpython')",
+        help="Install only a specific CMake component (example: '-Cbindings')",
+    ),
+    BuildExtOption(
+        variable="no-cmake-extension",
+        short="K",
+        help="Disable a CMakeExtension module (examples: '-Kall', '-Kbar', '-Kbar;foo')",
     ),
 ]
 
@@ -49,11 +53,22 @@ class BuildExtension(build_ext):
         # It overrides the content of the cmake_component option of CMakeExtension.
         self.component = None
 
+        # Initialize the 'no-cmake-extension' custom option.
+        # It allows disabling one or more CMakeExtension from the command line.
+        self.no_cmake_extension = None
+
     def finalize_options(self):
 
         # Parse the custom CMake options and store them in a new attribute
-        defines = self.define.split(";") if self.define is not None else []
+        defines = [] if self.define is None else self.define.split(";")
         self.cmake_defines = [f"-D{define}" for define in defines]
+
+        # Parse the disabled CMakeExtension modules and store them in a new attribute
+        self.no_cmake_extensions = (
+            []
+            if self.no_cmake_extension is None
+            else self.no_cmake_extension.split(";")
+        )
 
         # Call base class
         build_ext.finalize_options(self)
@@ -78,6 +93,20 @@ class BuildExtension(build_ext):
             raise RuntimeError("Required command 'ninja' not found")
 
         for ext in cmake_extensions:
+
+            # Disable the extension if specified in the command line
+            if ext.name in self.no_cmake_extensions or "all" in self.no_cmake_extensions:
+                continue
+
+            # Disable all extensions if this env variable is present
+            disabled_set = {"0", "false", "off", "no"}
+            env_var_name = "CMAKE_BUILD_EXTENSION_ENABLED"
+            if (
+                env_var_name in os.environ
+                and os.environ[env_var_name].lower() in disabled_set
+            ):
+                continue
+
             self.build_extension(ext)
 
     def build_extension(self, ext: CMakeExtension) -> None:
