@@ -15,13 +15,12 @@ custom_options = [
     BuildExtOption(
         variable="define",
         short="D",
-        help="Create or update CMake cache "
-        "(concatenate options with '-DBAR=b;FOO=f')",
+        help="Create or update CMake cache " "(example: '-DBAR=b;FOO=f')",
     ),
     BuildExtOption(
         variable="component",
         short="C",
-        help="Install only a specific CMake component " "('-Cpython')",
+        help="Install only a specific CMake component (example: '-Cbindings')",
     ),
     BuildExtOption(
         variable="no-cmake-extension",
@@ -61,7 +60,7 @@ class BuildExtension(build_ext):
     def finalize_options(self):
 
         # Parse the custom CMake options and store them in a new attribute
-        defines = self.define.split(";") if self.define is not None else []
+        defines = [] if self.define is None else self.define.split(";")
         self.cmake_defines = [f"-D{define}" for define in defines]
 
         # Parse the disabled CMakeExtension modules and store them in a new attribute
