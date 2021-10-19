@@ -95,7 +95,10 @@ class BuildExtension(build_ext):
         for ext in cmake_extensions:
 
             # Disable the extension if specified in the command line
-            if ext.name in self.no_cmake_extensions or "all" in self.no_cmake_extensions:
+            if (
+                ext.name in self.no_cmake_extensions
+                or "all" in self.no_cmake_extensions
+            ):
                 continue
 
             # Disable all extensions if this env variable is present
@@ -148,6 +151,8 @@ class BuildExtension(build_ext):
             "-GNinja",
             f"-DCMAKE_BUILD_TYPE={ext.cmake_build_type}",
             f"-DCMAKE_INSTALL_PREFIX:PATH={cmake_install_prefix}",
+            # Fix #26: https://github.com/diegoferigo/cmake-build-extension/issues/26
+            f"-DCMAKE_MAKE_PROGRAM={shutil.which('ninja')}",
         ]
 
         # Extend the configure arguments with those passed from the extension
