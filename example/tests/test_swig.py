@@ -61,7 +61,7 @@ def test_executable():
     assert result.stdout.strip() == "42"
 
     result = subprocess.run(
-        "python -m mymath_swig.bin print_answer_swig".split(),
+        [sys.executable, "-m", "mymath_swig.bin", "print_answer_swig"],
         capture_output=True,
         text=True,
     )
