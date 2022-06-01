@@ -12,7 +12,7 @@
 
 **Setuptools extension to build and package CMake projects.**
 
-This projects aims to simplify the integration of C++ projects based on CMake with Python packaging tools.
+This project aims to simplify the integration of C++ projects based on CMake with Python packaging tools.
 CMake provides out-of-the-box support to either [SWIG][swig] and [pybind11][pybind11],
 that are two among the most used projects to create Python bindings from C++ sources.
 
