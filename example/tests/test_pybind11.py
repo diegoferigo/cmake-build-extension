@@ -64,7 +64,7 @@ def test_executable():
     assert result.stdout.strip() == "42"
 
     result = subprocess.run(
-        "python -m mymath_pybind11.bin print_answer_pybind11".split(),
+        [sys.executable, "-m", "mymath_pybind11.bin", "print_answer_pybind11"],
         capture_output=True,
         text=True,
     )
