@@ -68,6 +68,7 @@ setuptools.setup(
                 "-DEXAMPLE_WITH_PYBIND11:BOOL=OFF",
             ]
             + CIBW_CMAKE_OPTIONS,
+            cmake_parallel_jobs=4,
         ),
         cmake_build_extension.CMakeExtension(
             name="Pybind11Bindings",
@@ -99,6 +100,7 @@ setuptools.setup(
                 "-DEXAMPLE_WITH_PYBIND11:BOOL=ON",
             ]
             + CIBW_CMAKE_OPTIONS,
+            cmake_parallel_jobs=4,
         ),
     ],
     cmdclass=dict(
