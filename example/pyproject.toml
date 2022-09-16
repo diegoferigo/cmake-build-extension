@@ -3,7 +3,7 @@ requires = [
     "wheel",
     "setuptools>=45",
     "setuptools_scm[toml]>=6.0",
-    "cmake_build_extension",
+    # "cmake_build_extension", # EXPERIMENT: It seems that building the examples is downloading the last release instead of using the local copy.
     "numpy",
     "pybind11",
 ]
