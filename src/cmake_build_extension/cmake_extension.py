@@ -21,6 +21,7 @@ class CMakeExtension(Extension):
         cmake_component: The name of component to install. Defaults to all components.
         cmake_depends_on: List of dependency packages containing required CMake projects.
         expose_binaries: List of binary paths to expose, relative to top-level directory.
+        cmake_generator: The generator to be used by CMake. Defaults to Ninja.
     """
 
     def __init__(
@@ -35,6 +36,7 @@ class CMakeExtension(Extension):
         cmake_component: str = None,
         cmake_depends_on: List[str] = (),
         expose_binaries: List[str] = (),
+        cmake_generator: str = "Ninja",
     ):
 
         super().__init__(name=name, sources=[])
@@ -54,3 +56,4 @@ class CMakeExtension(Extension):
         self.cmake_configure_options = cmake_configure_options
         self.cmake_component = cmake_component
         self.expose_binaries = expose_binaries
+        self.cmake_generator = cmake_generator
