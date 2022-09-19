@@ -26,10 +26,12 @@ jobs:
           - macos-latest
           - windows-latest
         include:
-          - experimental: false
+          - optional: false
+          # Mark the Windows Python3.7 run as optional, as executing the examples throws the following error:
+          #   ImportError: DLL load failed: The specified procedure could not be found.
           - os: windows-latest
             python-version: 3.7
-            experimental: true
+            optional: true
 
     steps:
 
@@ -65,7 +67,7 @@ jobs:
           sudo apt install build-essential swig libeigen3-dev
 
       - name: Build and install example
-        continue-on-error: ${{ matrix.experimental }}
+        continue-on-error: ${{ matrix.optional }}
         working-directory: example
         run: pip install -v .[all]
         env:
@@ -73,7 +75,7 @@ jobs:
           CIBUILDWHEEL: 1
 
       - name: Test example
-        continue-on-error: ${{ matrix.experimental }}
+        continue-on-error: ${{ matrix.optional }}
         working-directory: example
         run: pytest
 
