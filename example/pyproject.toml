@@ -1,8 +1,10 @@
 [build-system]
 requires = [
     "wheel",
-    "setuptools>=45",
-    "setuptools_scm[toml]>=6.0",
+    # Check the updated version pinning requirements in:
+    # https://github.com/pypa/setuptools_scm
+    "setuptools",
+    "setuptools_scm[toml]",
     "cmake_build_extension",
     "numpy",
     "pybind11",
