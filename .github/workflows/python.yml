@@ -16,20 +16,19 @@ jobs:
       fail-fast: false
       matrix:
         python-version:
-          - 3.6
           - 3.7
           - 3.8
           - 3.9
           - "3.10"
+          # - "3.11" # Add once stable release is out.
         os:
           - ubuntu-20.04
           - macos-latest
           - windows-latest
         include:
-          # Building this entry fails with the following error:
-          # math.h:91:12: error: 'std::_hypot' has not been declared
+          - experimental: false
           - os: windows-latest
-            python-version: 3.6
+            python-version: 3.7
             experimental: true
 
     steps:
@@ -38,7 +37,7 @@ jobs:
       - run: git fetch --prune --unshallow
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
 

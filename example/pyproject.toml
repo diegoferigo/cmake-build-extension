@@ -1,8 +1,7 @@
 [build-system]
 requires = [
     "wheel",
-    "setuptools>=45",
-    "setuptools_scm[toml]>=6.0",
+    "setuptools",
     "cmake_build_extension",
     "numpy",
     "pybind11",
