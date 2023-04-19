@@ -169,6 +169,9 @@ class BuildExtension(build_ext):
         # CMake build arguments
         build_args = ["--config", ext.cmake_build_type]
 
+        # CMake install arguments
+        install_args = ["--config", ext.cmake_build_type]
+
         if platform.system() == "Windows":
 
             configure_args += []
@@ -209,7 +212,7 @@ class BuildExtension(build_ext):
         build_command = ["cmake", "--build", build_folder] + build_args
 
         # 3. Compose CMake install command
-        install_command = ["cmake", "--install", build_folder]
+        install_command = ["cmake", "--install", build_folder] + install_args
 
         # If the cmake_component option of the CMakeExtension is used, install just
         # the specified component.
