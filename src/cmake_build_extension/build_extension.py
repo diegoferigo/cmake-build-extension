@@ -151,7 +151,7 @@ class BuildExtension(build_ext):
 
         # Select the appropriate generator and accompanying settings
         if ext.cmake_generator is not None:
-            configure_args += [f"-G \"{ext.cmake_generator}\""]
+            configure_args += ["-G", ext.cmake_generator]
 
             if ext.cmake_generator == "Ninja":
                 # Fix #26: https://github.com/diegoferigo/cmake-build-extension/issues/26
