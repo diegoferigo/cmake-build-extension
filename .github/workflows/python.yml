@@ -16,22 +16,17 @@ jobs:
       fail-fast: false
       matrix:
         python-version:
-          - 3.7
           - 3.8
           - 3.9
           - "3.10"
           - "3.11"
+          - "3.12"
         os:
           - ubuntu-20.04
           - macos-latest
           - windows-latest
         include:
           - optional: false
-          # Mark the Windows Python3.7 run as optional, as executing the examples throws the following error:
-          #   ImportError: DLL load failed: The specified procedure could not be found.
-          - os: windows-latest
-            python-version: 3.7
-            optional: true
 
     steps:
 
