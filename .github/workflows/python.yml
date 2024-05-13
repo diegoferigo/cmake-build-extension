@@ -27,11 +27,6 @@ jobs:
           - windows-latest
         include:
           - optional: false
-          # Mark the Windows Python3.7 run as optional, as executing the examples throws the following error:
-          #   ImportError: DLL load failed: The specified procedure could not be found.
-          - os: windows-latest
-            python-version: 3.7
-            optional: true
 
     steps:
 
