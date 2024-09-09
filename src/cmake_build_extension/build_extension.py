@@ -177,7 +177,7 @@ class BuildExtension(build_ext):
 
             configure_args += []
 
-        elif platform.system() in {"Linux", "Darwin"}:
+        elif platform.system() in {"Linux", "Darwin", "GNU"}:
 
             configure_args += []
 
