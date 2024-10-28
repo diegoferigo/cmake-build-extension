@@ -21,8 +21,9 @@ jobs:
           - "3.10"
           - "3.11"
           - "3.12"
+          - "3.13"
         os:
-          - ubuntu-20.04
+          - ubuntu-22.04
           - macos-latest
           - windows-latest
         include:
@@ -30,11 +31,11 @@ jobs:
 
     steps:
 
-      - uses: actions/checkout@master
+      - uses: actions/checkout@v4
       - run: git fetch --prune --unshallow
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -77,7 +78,9 @@ jobs:
   publish:
     name: Publish to PyPI
     needs: build-and-test
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
+    permissions:
+        id-token: write
 
     steps:
 
@@ -85,9 +88,9 @@ jobs:
       - run: git fetch --prune --unshallow
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
-          python-version: 3.8
+          python-version: 3.10
 
       - name: Install Python tools
         run: pip install build
@@ -102,7 +105,7 @@ jobs:
         run: test $(find dist/ -name *-none-any.whl | wc -l) -gt 0
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           path: dist/*
           name: dist
@@ -112,8 +115,6 @@ jobs:
           github.repository == 'diegoferigo/cmake-build-extension' &&
           ((github.event_name == 'push' && github.ref == 'refs/heads/master') ||
            (github.event_name == 'release'))
-        uses: pypa/gh-action-pypi-publish@master
+        uses: pypa/gh-action-pypi-publish@release/v1
         with:
-          user: __token__
-          password: ${{ secrets.PYPI_TOKEN }}
           skip_existing: true
